@@ -33,30 +33,7 @@ def validCommand(inp):
     else:
         return False
 
-#--------------------------------------------------------------------
-# Read in the given accounts file
-#--------------------------------------------------------------------
-def readAccounts(path):
-    lines   = FileIO.readLines(path)
-    cleaned = []
-    
-    if len(lines) < 1:
-        raise ValueError('Empty Accounts File')
 
-    # Clean and strip newlines from the numbers, then
-    # ensure that they're valid account numbers
-    for line in lines:
-        clean = Utility.cleanString(line)
-        if (not clean.isdigit() or len(clean.strip()) != 7 or (
-            clean != lines[-1].strip() and clean[0] == '0')):
-            raise ValueError('Invalid accounts file, error: ' + clean)
-        cleaned.append(clean)
-    
-    # Ensure that the last line is the all zero account number
-    if (cleaned[-1] != "0000000"):
-        raise ValueError('Invalid accounts file, missing zero account number at file end')
-
-    return cleaned
 
 #--------------------------------------------------------------------
 # Main

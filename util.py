@@ -1,10 +1,12 @@
 import re
 import sys
+from fileio import FileIO
 
 #--------------------------------------------------------------------
 # Encapsulation of common utilitarian functions
 #--------------------------------------------------------------------
 class Utility:
+    errorPath = ""
     #--------------------------------------------------------------------
     # Read in input from the console with a given message, appending the 
     # common input character. Prevent catch a crash if it reads in a EOF
@@ -88,3 +90,18 @@ class Utility:
         else:
             return inp
 
+    @staticmethod
+    def log(msg):
+        lines = FileIO.readLines(errorPath)
+        lines.append(msg)
+        FileIO.writeLines(lines)
+
+    @staticmethod    
+    def fatal(msg):
+        Utility.log(msg)
+        raise ValueError(msg)
+
+    @staticmethod
+    def validateAmount(amount):
+        if (not amount.isdigit()):
+            Utility.fatal()
