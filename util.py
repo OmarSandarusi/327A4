@@ -81,6 +81,7 @@ class Utility:
         lines = FileIO.readLines(errorPath)
         lines.append(msg)
         FileIO.writeLines(lines)
+        Utility.error(msg)
 
     @staticmethod    
     def fatal(msg):
