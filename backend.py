@@ -12,11 +12,12 @@ import argparse
 from fileio import FileIO
 from commands import Commands
 from util import Utility
+from accounts import Accounts
 
 #--------------------------------------------------------------------
 # Get the command line options
 #--------------------------------------------------------------------
-def commandArgs():
+def getCommandArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument("mergedtransactionfile")
     parser.add_argument("oldmasterfile")
@@ -27,35 +28,19 @@ def commandArgs():
 #--------------------------------------------------------------------
 # Validate that this is a valid command
 #--------------------------------------------------------------------
-def validCommand(inp):
-    if (inp in Commands.VALID_COMMANDS):
+def validCommand(command):
+    if (command in Commands.VALID_COMMANDS):
         return True
     else:
         return False
-
-
 
 #--------------------------------------------------------------------
 # Main
 #--------------------------------------------------------------------
 
-# Get the commandline arguments
-args = commandArgs()
-
-# Read in the accounts file
-try:
-    accounts = readAccounts(args.accountfile)
-except ValueError as e:
-    print e.message
-    FileIO.writeLines(args.transactionfile, ['EOS 0000000 000 0000000 ***'])
-    sys.exit()
-
-# Instantiate our commands object
-commands = Commands(accounts, args.transactionfile)
-
-print("\n############")
-print(" BACK END")
-print("############\n")
+args = getCommandArgs()
+Accounts.initialize(args.accountfile)
+commands = Commands(args.transactionfile)
 
 while(True):
     commands.runCommand(getCommand())
