@@ -21,3 +21,15 @@ class Accounts:
             if (not Utility.checkAccountName(params[2])):
                 Utiltiy.fatal("Line " + count + " contains invalid account name")
             self.list.append(Account(params[0], params[1], params[2]))
+    
+    def addAccount(self, number, balance, name):
+        self.list.append(Account(number, balance, name))
+
+    def getAccountByNumber(self, number):
+        return self.list[0]
+
+    def getAccountByName(self, name):
+        return self.list[0]
+
+    def finish(self, validPath, masterPath):
+        return
