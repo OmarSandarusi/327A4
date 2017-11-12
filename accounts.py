@@ -25,12 +25,10 @@ class Accounts:
             self.list.append(Account(int(params[0]), int(params[1]), params[2]))
     
     def addAccount(self, number, balance, name): #number and balance have to be int
-        if (not isinstance(number, int) or not isinstance(balance, int)):
-            Utility.fatal('Add account must receive integer numbers and balances')
-        for account in self.list:
-            if account.number == number:
-                Utility.fatal('Attempting to add account: Account already exists for number ' + number)
-        self.list.append(Account(number, balance, name))
+        if getAccountByNumber(number) is None:
+            Utility.log('Account already exists for account: ' + number)
+        else:
+            self.list.append(Account(number, balance, name))
 
     def getAccountByNumber(self, number):
         for account in self.list:
@@ -44,16 +42,50 @@ class Accounts:
                 return account
         return None
 
-    def deleteAccount(self, number):
-        for i, account in enumerate(self.list):
-            if account.number == number:
-                del self.list[i]
-                break
+    def deleteAccount(self, number, name):
+        acct = getAccountByNumber(number)
+        if acct is None:
+            Utility.log('Aborting delete, account does not exist: ' + number)
+            return
+        elif acct.balance != 0:
+            Utility.log('Aborting delete, account balance is not zero: ' + number)
+        elif acct.name != name:
+            Utility.log('Aborting delete, account names do not match: ' + name + ' / ' + acct.name)
+        else:
+            for i, account in enumerate(self.list):
+                if account.number == number:
+                    del self.list[i]
+                    break
 
     def deposit(self, number, amount):
         return
     
     def withdraw(self, number, amount):
+        return
+
+    def transfer(self, fromNumber, toNumber, amount):
+
+        # if not fromAccount in self.accounts:
+        #     Utility.error("Account does not exist")
+        #     return
+
+        # toAccount = Utility.getAccountNumber("To account #")
+        # if toAccount is None:
+        #     return
+        # if not toAccount in self.accounts:
+        #     Utility.error("Account does not exist")
+        #     return
+
+        # if (fromAccount == toAccount):
+        #     Utility.error("Cannot transfer from and to the same account.")
+        #     return
+
+        # amount = Utility.getAmount(self.loginType, "Amount to transfer in cents")
+        # if amount is None:
+        #     return
+
+        # self.transactions.transfer(fromAccount, toAccount, amount)
+
         return
 
     def finish(self): #sort and write

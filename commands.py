@@ -7,172 +7,120 @@ from transactions import Transactions
 class Commands:
     # Enumeration of valid commands
     VALID_COMMANDS = [
-        'login',
-        'logout',
-        'createacct',
-        'deleteacct',
-        'deposit',
-        'withdraw',
-        'transfer']
+        'DEP',
+        'WDR',
+        'XFR',
+        'NEW',
+        'DEL',
+        'EOS'
+    ]
 
-    def __init__(self, accounts, transactionfile): 
-        self.loginType = ""     
-        self.accounts  = accounts
-        self.deletedAccounts = []
-        self.sessionWithdraw = 0
-        self.transactions = Transactions(transactionfile)
+    # Enumeration of unused values
+    Unused = {
+        'account' : '0000000',
+        'amount'  : '000',
+        'name'    : '***'
+    }
+
+    def __init__(self, oldMasterFile, newMasterFile, accountsFile): 
+        self.lastCommand = ''
+        self.accounts = Accounts(accountspath)
+        self.transactions = Transactions(transactionpath)
 
     #--------------------------------------------------------------------
-    # Login command
+    # EOS
     #--------------------------------------------------------------------
-    def login(self):
-        inp = Utility.getInput("Machine or agent").lower()
-
-        if (inp not in ["machine", "agent"]):
-            Utility.error("Not a valid login type.")
+    def EOS(self, account1, account2, amount, name):
+        if account1 != Unused.account or account2 != Unused.account:
+            Utility.fatal('Invalid account number(s) in EOS command' + account1 + ' / ' + account2)
+        elif amount != Unused.amount:
+            Utility.fatal('Invalid amount in EOS command: ' + amount)
+        elif name != Unused.name:
+            Utility.fatal('Invalid account name in EOS command: ' + name)
         else:
-            self.loginType = inp
-            self.transactions.clear()
-            print("Logged in as " + str(self.loginType))
+            # If this is the second EOS in a row, exit
+            if cmd is 'EOS' and self.lastCommand is 'EOS':
+                self.accounts.finish()
+                sys.exit()
+
+            self.lastCommand = 'EOS'
 
     #--------------------------------------------------------------------
-    # Logout command
+    # Createacct
     #--------------------------------------------------------------------
-    def logout(self):
-        self.loginType = ""
-        self.transactions.finish()
-        print("Logged out")
+    def NEW(self, account1, account2, amount, name):
+        Utility.checkAccountNumber(account1)
+        Utility.checkAccountName(name)
+        if account2 != Unused.account:
+            Utility.fatal('Invalid account number in NEW command' + account2)
+        elif amount != Unused.amount:
+            Utility.fatal('Invalid amount in NEW command: ' + amount)
 
-    #--------------------------------------------------------------------
-    # Createacct command
-    #--------------------------------------------------------------------
-    def createacct(self):
-        if (self.loginType != "agent"):
-            Utility.error("Only available in privileged mode")
-            return
-
-        num  = Utility.getAccountNumber("Enter the account number of the new account")
-        if (num == None):
-            return
-        elif (num in self.accounts):
-            Utility.error("That account number already exists.")
-            return
-        elif (num in self.deletedAccounts):
-            Utility.error("That account was deleted.")
-            return
-
-        name = Utility.getAccountName("Enter the name of the new account")
-        if (name == None):
-            return
-
-        self.transactions.createAccount(num, name)
-
-    #--------------------------------------------------------------------
-    # Deleteacct command
-    #--------------------------------------------------------------------
-    def deleteacct(self):
-        if (self.loginType != "agent"):
-            Utility.error("Only available in privileged mode")
-            return
-
-        num  = Utility.getAccountNumber("Enter the account number of the account to delete")
-        if (num == None):
-            return
-        
-        name = Utility.getAccountName("Enter the name of the account to delete")
-        if (name == None):
-            return
-
-        # Validate that the account number exists
-        if (not num in self.accounts):
-            Utility.error("That account number is not valid")
+        acct = self.accounts.getAccountByNumber(account1)
+        if acct is not None:
+            Utility.log('Account number already exists.')
         else:
-            self.accounts.remove(num)
-            self.deletedAccounts.append(num)
-            self.transactions.deleteAccount(num, name)
+            self.accounts.addAccount(account1, 0, name)
+    #--------------------------------------------------------------------
+    # Deleteacct
+    #--------------------------------------------------------------------
+    def DEL(self, account1, account2, amount, name):
+        Utility.checkAccountNumber(account1)
+        Utility.checkAccountName(name)
+
+        if account2 != Unused.account:
+            Utility.fatal('Invalid account number in DEL command' + account2)
+        elif amount != Unused.amount:
+            Utility.fatal('Invalid amount in DEL command: ' + amount)
+        else:
+            self.accounts.deleteAccount(account1, name)
 
     #--------------------------------------------------------------------
-    # Withdraw command
+    # Withdraw
     #--------------------------------------------------------------------
-    def withdraw(self):
-        account = Utility.getAccountNumber("Account #")
-        if account is None:
-            return
-        if account not in self.accounts:
-            Utility.error("Account does not exist")
-            return
+    def WDR(self, account1, account2, amount, name):
+        Utility.checkAccountNumber(account1)
+        Utility.checkAmount(amount)
 
-        amount = Utility.getAmount(self.loginType, "Amount in cents")
-        if amount is None:
-            return
-
-        numAmount = int(amount)
-        if (self.sessionWithdraw + numAmount > self.getWithdrawLimit()):
-            Utility.error("This withdrawal would exceed your total allowed sum.")
-            return
-        
-        self.sessionWithdraw += numAmount
-        self.transactions.withdraw(account, amount)
+        if account2 != Unused.account:
+            Utility.fatal('Invalid account number in WDR command' + account2)
+        elif name != Unused.name:
+            Utility.fatal('Invalid account name in WDR command: ' + name)
+        else:
+            self.accounts.withdraw(account1, amount)
 
     #--------------------------------------------------------------------
-    # Deposit command
+    # Deposit
     #--------------------------------------------------------------------
-    def deposit(self):
-        account = Utility.getAccountNumber("Account #")
-        if account is None:
-            return
-        if account not in self.accounts:
-            Utility.error("Account does not exist")
-            return
+    def DEP(self, account1, account2, amount, name):
+        Utility.checkAccountNumber(account1)
+        Utility.checkAmount(amount)
 
-        amount = Utility.getAmount(self.loginType, "Amount in cents")
-        if amount is None:
-            return
-
-        self.transactions.deposit(account, amount)
+        if account2 != Unused.account:
+            Utility.fatal('Invalid account number in DEP command' + account2)
+        elif name != Unused.name:
+            Utility.fatal('Invalid account name in DEP command: ' + name)
+        else:
+            self.accounts.deposit(account1, amount)
 
     #--------------------------------------------------------------------
-    # Transfer command
+    # Transfer
     #--------------------------------------------------------------------
-    def transfer(self):
-        fromAccount = Utility.getAccountNumber("From account #")
-        if fromAccount is None:
-            return
-        if not fromAccount in self.accounts:
-            Utility.error("Account does not exist")
-            return
+    def XFR(self, account1, account2, amount, name):
+        Utility.checkAccountNumber(account1)
+        Utility.checkAccountNumber(account2)
+        Utility.checkAmount(amount)
 
-        toAccount = Utility.getAccountNumber("To account #")
-        if toAccount is None:
-            return
-        if not toAccount in self.accounts:
-            Utility.error("Account does not exist")
-            return
-
-        if (fromAccount == toAccount):
-            Utility.error("Cannot transfer from and to the same account.")
-            return
-
-        amount = Utility.getAmount(self.loginType, "Amount to transfer in cents")
-        if amount is None:
-            return
-
-        self.transactions.transfer(fromAccount, toAccount, amount)
+        if name != Unused.name:
+            Utility.fatal('Invalid account name in XFR command: ' + name)
+        else:
+            self.accounts.transfer(account1, account2, amount)
 
     #--------------------------------------------------------------------
-    # Dispatcher function that wraps command calls with error checking logic
+    # Dispatcher function that ensures it is a valid command
     #--------------------------------------------------------------------
-    def runCommand(self, cmd):
-        if (cmd != 'login' and self.loginType == ""):
-            Utility.error("You must be logged in first")
+    def runCommand(self, cmd, account1, account2, amount, name):
+        if cmd not in VALID_COMMANDS:
+            raise ValueError('Invalid command code: ' + cmd)
         else:
             getattr(Commands, cmd)(self)
-
-    #--------------------------------------------------------------------
-    # Returns the withdrawal limit depending on the session type
-    #--------------------------------------------------------------------
-    def getWithdrawLimit(self):
-        if (self.loginType == "machine"):
-            return 100000
-        else:
-            return 99999999
