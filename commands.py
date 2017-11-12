@@ -1,5 +1,5 @@
-from util import Utility
-from transactions import Transactions
+from util     import Utility
+from accounts import Accounts
 
 #--------------------------------------------------------------------
 # Contains command-specific infomation and the functions that run each command, eg. login, createacct, etc..
@@ -24,8 +24,7 @@ class Commands:
 
     def __init__(self, oldMasterFile, newMasterFile, accountsFile): 
         self.lastCommand = ''
-        self.accounts = Accounts(accountspath)
-        self.transactions = Transactions(transactionpath)
+        self.accounts = Accounts(oldMasterFile, newMasterFile, accountsFile)
 
     #--------------------------------------------------------------------
     # EOS
@@ -42,8 +41,6 @@ class Commands:
             if cmd is 'EOS' and self.lastCommand is 'EOS':
                 self.accounts.finish()
                 sys.exit()
-
-            self.lastCommand = 'EOS'
 
     #--------------------------------------------------------------------
     # Createacct
@@ -124,3 +121,4 @@ class Commands:
             raise ValueError('Invalid command code: ' + cmd)
         else:
             getattr(Commands, cmd)(self)
+            self.lastCommand = cmd
