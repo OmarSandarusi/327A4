@@ -39,8 +39,7 @@ def validCommand(command):
 #--------------------------------------------------------------------
 
 args = getCommandArgs()
-Accounts.initialize(args.accountfile)
-commands = Commands(args.transactionfile)
+commands = Commands(args.oldmasterfile, args.newmasterfile, args.newaccountsfile)
 
 while(True):
     commands.runCommand(getCommand())
