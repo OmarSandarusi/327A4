@@ -58,7 +58,11 @@ class Accounts:
                     break
 
     def deposit(self, number, amount):
-        return
+        acct = getAccountByNumber(number)
+        if acct is None:
+            Utility.log('Aborting deposit, account does not exist: ' + number)
+            return
+        acct.balance += amount
     
     def withdraw(self, number, amount):
         acct = getAccountByNumber(number)
