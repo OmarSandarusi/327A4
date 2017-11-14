@@ -33,9 +33,9 @@ class Commands:
         if account1 != Unused.account or account2 != Unused.account:
             Utility.fatal('Invalid account number(s) in EOS command' + account1 + ' / ' + account2)
         elif amount != Unused.amount:
-            Utility.fatal('Invalid amount in EOS command: ' + amount)
+            fatalAmount('EOS', amount)
         elif name != Unused.name:
-            Utility.fatal('Invalid account name in EOS command: ' + name)
+            fatalAccountName('EOS', name)
         else:
             # If this is the second EOS in a row, exit
             if cmd is 'EOS' and self.lastCommand is 'EOS':
@@ -45,15 +45,15 @@ class Commands:
     #--------------------------------------------------------------------
     # Createacct
     #--------------------------------------------------------------------
-    def NEW(self, account1, account2, amount, name):
-        Utility.checkAccountNumber(account1)
+    def NEW(self, account, amount, name):
+        Utility.checkAccountNumber(account)
         Utility.checkAccountName(name)
-        if account2 != Unused.account:
-            Utility.fatal('Invalid account number in NEW command' + account2)
-        elif amount != Unused.amount:
-            Utility.fatal('Invalid amount in NEW command: ' + amount)
+        if account == Unused.account:
+            fatalAccountNumber('NEW', account)
+        if amount == Unused.amount:
+            fatalAmount('NEW', amount)
 
-        acct = self.accounts.getAccountByNumber(account1)
+        acct = self.accounts.getAccountByNumber(account)
         if acct is not None:
             Utility.log('Account number already exists.')
         else:
@@ -61,44 +61,36 @@ class Commands:
     #--------------------------------------------------------------------
     # Deleteacct
     #--------------------------------------------------------------------
-    def DEL(self, account1, account2, amount, name):
-        Utility.checkAccountNumber(account1)
+    def DEL(self, account, amount, name):
+        Utility.checkAccountNumber(account)
         Utility.checkAccountName(name)
-
-        if account2 != Unused.account:
-            Utility.fatal('Invalid account number in DEL command' + account2)
-        elif amount != Unused.amount:
-            Utility.fatal('Invalid amount in DEL command: ' + amount)
-        else:
-            self.accounts.deleteAccount(account1, name)
+        if account == Unused.account:
+            fatalAccountNumber('DEL', account)
+        if amount == Unused.amount:
+            fatalAmount('DEL', amount)
+        self.accounts.deleteAccount(account1, name)
 
     #--------------------------------------------------------------------
     # Withdraw
     #--------------------------------------------------------------------
-    def WDR(self, account1, account2, amount, name):
-        Utility.checkAccountNumber(account1)
+    def WDR(self, account, amount, name):
+        Utility.checkAccountNumber(account)
         Utility.checkAmount(amount)
-
-        if account2 != Unused.account:
-            Utility.fatal('Invalid account number in WDR command' + account2)
-        elif name != Unused.name:
-            Utility.fatal('Invalid account name in WDR command: ' + name)
-        else:
-            self.accounts.withdraw(account1, amount)
+        if account == Unused.account:
+            fatalAccountNumber('WDR', account)
+        if name == Unused.name:
+            fatalAccountName('WDR', name)
+        self.accounts.withdraw(account, amount)
 
     #--------------------------------------------------------------------
     # Deposit
     #--------------------------------------------------------------------
-    def DEP(self, account1, account2, amount, name):
-        Utility.checkAccountNumber(account1)
+    def DEP(self, account, amount, name):
+        Utility.checkAccountNumber(account)
         Utility.checkAmount(amount)
-
-        if account2 != Unused.account:
-            Utility.fatal('Invalid account number in DEP command' + account2)
-        elif name != Unused.name:
-            Utility.fatal('Invalid account name in DEP command: ' + name)
-        else:
-            self.accounts.deposit(account1, amount)
+        if account != Unused.account:
+            fatalAccountNumber('DEP', account)
+        self.accounts.deposit(account, amount)
 
     #--------------------------------------------------------------------
     # Transfer
@@ -107,11 +99,13 @@ class Commands:
         Utility.checkAccountNumber(account1)
         Utility.checkAccountNumber(account2)
         Utility.checkAmount(amount)
-
-        if name != Unused.name:
-            Utility.fatal('Invalid account name in XFR command: ' + name)
-        else:
-            self.accounts.transfer(account1, account2, amount)
+        if account1 == Unused.account:
+            fatalAccountNumber('XFR', account1)
+        if account2 == Unused.account:
+            fatalAccountNumber('XFR', account2)
+        if name == Unused.name:
+            fatalAccountName('XFR', name)
+        self.accounts.transfer(account1, account2, amount)
 
     #--------------------------------------------------------------------
     # Dispatcher function that ensures it is a valid command
@@ -122,3 +116,12 @@ class Commands:
         else:
             getattr(Commands, cmd)(self)
             self.lastCommand = cmd
+
+    def fatalAccountNumber(command, number):
+        Utility.fatal('Invalid account number in ' + command + ' command: ' + number)
+
+    def fatalAccountName(command, name):
+        Utility.fatal('Invalid account name in ' + command + ' command: ' + name)
+
+    def fatalAmount(command, amount):
+        Utility.fatal('Invalid amount in ' + command + ' command: ' + amount)
