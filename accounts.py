@@ -47,7 +47,8 @@ class Accounts:
         if acct is None:
             Utility.log('Aborting delete, account does not exist: ' + number)
             return
-        elif acct.balance != 0:
+
+        if acct.balance != 0:
             Utility.log('Aborting delete, account balance is not zero: ' + number)
         elif acct.name != name:
             Utility.log('Aborting delete, account names do not match: ' + name + ' / ' + acct.name)
@@ -68,35 +69,27 @@ class Accounts:
         acct = getAccountByNumber(number)
         if acct is None:
             Utility.log('Aborting withdrawal, account does not exist: ' + number)
-        elif acct.balance < amount:
+            return
+        if acct.balance < amount:
             Utility.log('Aborting withdrawal, the account does not have enough funds: ' + number)
         else:
-            acct.balance = acct.balance - number
-        return
+            acct.balance -= amount
 
     def transfer(self, fromNumber, toNumber, amount):
+        fromAcct = getAccountByNumber(fromNumber)
+        toAcct   = getAccountByNumber(toNumber)
 
-        # if not fromAccount in self.accounts:
-        #     Utility.error("Account does not exist")
-        #     return
-
-        # toAccount = Utility.getAccountNumber("To account #")
-        # if toAccount is None:
-        #     return
-        # if not toAccount in self.accounts:
-        #     Utility.error("Account does not exist")
-        #     return
-
-        # if (fromAccount == toAccount):
-        #     Utility.error("Cannot transfer from and to the same account.")
-        #     return
-
-        # amount = Utility.getAmount(self.loginType, "Amount to transfer in cents")
-        # if amount is None:
-        #     return
-
-        # self.transactions.transfer(fromAccount, toAccount, amount)
-
+        if fromAcct is None:
+            Utility.log('Aborting transfer, account does not exist: ' + fromNumber)
+        elif toAcct is None:
+            Utility.log('Aborting transfer, account does not exist: ' + toNumber)
+        elif fromNumber == toNumber:
+            Utility.log('Aborting transfer, cannot transfer between the same accounts: ' + fromNumber + '/' + toNumber)
+        elif fromAcct.balance < amount:
+            Utility.log('Aborting transfer, not enough funds in the source account: ' + fromNumber)
+        else:
+            fromAcct.balance -= amount
+            toAcct.balance   += amount
         return
 
     def finish(self): #sort and write
