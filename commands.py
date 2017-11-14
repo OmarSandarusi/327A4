@@ -1,3 +1,5 @@
+import sys
+
 from util     import Utility
 from accounts import Accounts
 
@@ -122,6 +124,9 @@ class Commands:
             getattr(Commands, cmd)(self)
             self.lastCommand = cmd
 
+    #--------------------------------------------------------------------
+    # Helper functions for creating fatal errors
+    #--------------------------------------------------------------------
     def fatalAccountNumber(command, number):
         Utility.fatal('Invalid account number in ' + command + ' command: ' + number)
  

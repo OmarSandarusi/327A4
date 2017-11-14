@@ -7,11 +7,11 @@
 # 11JLT10, 12OZS
 #--------------------------------------------------------------------
 
-import sys
 import argparse
-from fileio import FileIO
+
+from fileio   import FileIO
 from commands import Commands
-from util import Utility
+from util     import Utility
 from accounts import Accounts
 
 #--------------------------------------------------------------------
@@ -24,23 +24,21 @@ def getCommandArgs():
     parser.add_argument("newmasterfile")
     parser.add_argument("newaccountsfile")
     return parser.parse_args()
-          
+
 #--------------------------------------------------------------------
-# Validate that this is a valid command
+# Parse a transaction file line into it's seperate parts
 #--------------------------------------------------------------------
-def validCommand(command):
-    if (command in Commands.VALID_COMMANDS):
-        return True
-    else:
-        return False
+def parseLine(line):
+    return line.split(' ')
 
 #--------------------------------------------------------------------
 # Main
 #--------------------------------------------------------------------
 
-args = getCommandArgs()
-Accounts.initialize(args.accountfile)
-commands = Commands(args.transactionfile)
+args     = getCommandArgs()
+commands = Commands(args.oldmasterfile, args.newmasterfile, args.newaccountsfile)
+lines    = readLines(args.mergedtransactionfile)
 
-while(True):
-    commands.runCommand(getCommand())
+for line in lines:
+    parsed = parseLine(line)
+    commands.runCommand(parsed[0], parsed[1], parsed[3], parsed[2], parsed[4])
