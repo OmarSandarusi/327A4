@@ -61,6 +61,13 @@ class Accounts:
         return
     
     def withdraw(self, number, amount):
+        acct = getAccountByNumber(number)
+        if acct is None:
+            Utility.log('Aborting withdrawal, account does not exist: ' + number)
+        elif acct.balance < amount:
+            Utility.log('Aborting withdrawal, the account does not have enough funds: ' + number)
+        else:
+            acct.balance = acct.balance - number
         return
 
     def transfer(self, fromNumber, toNumber, amount):
