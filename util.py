@@ -1,12 +1,13 @@
 import re
 import sys
+import os
 from fileio import FileIO
 
 #--------------------------------------------------------------------
 # Encapsulation of common utilitarian functions
 #--------------------------------------------------------------------
 class Utility:
-    errorPath = ""
+    errorPath = os.path.join(sys.path[0], 'error.txt')
     #--------------------------------------------------------------------
     # Read in input from the console with a given message, appending the 
     # common input character. Prevent catch a crash if it reads in a EOF
