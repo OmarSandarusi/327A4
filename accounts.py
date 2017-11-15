@@ -95,58 +95,42 @@ class Accounts:
     def finish(self): #sort and write
         return
 
+    #--------------------------------------------------------------------
+    # Sort accounts by their account number
+    #--------------------------------------------------------------------
+    def mergesort(accounts):
+        if (len(accounts) == 1 or len(accounts) == 0):
+            return accounts
 
-#--------------------------------------------------------------------
-# Sort our points by x and y
-#--------------------------------------------------------------------
-def sort():
-    global xPoints
-    global yPoints
+        mid = len(accounts) / 2
+        
+        l = mergesort(accounts[:mid])
+        r = mergesort(accounts[mid:])
 
-    xPoints = mergesort('x', Points)
-    yPoints = mergesort('y', Points)
+        return merge(l, r)
 
-#--------------------------------------------------------------------
-# Sort each pair of coordinates by either their x or y values
-#--------------------------------------------------------------------
-def mergesort(coord, points):
-    if (len(points) == 1 or len(points) == 0):
-        return points
+    #--------------------------------------------------------------------
+    # Merge two lists of accounts by order of account number
+    #--------------------------------------------------------------------
+    def merge(left, right):
+        res = []
+        i = 0
+        j = 0
 
-    mid = len(points) / 2
-    
-    l = mergesort(coord, points[:mid])
-    r = mergesort(coord, points[mid:])
+        while (i < len(left) and j < len(right)):
+            if(left[i].number < right[j].number):
+                res.append(left[i])
+                i += 1
+            else:
+                res.append(right[j])
+                j += 1
 
-    return merge(coord, l, r)
-
-#--------------------------------------------------------------------
-# Merge in sorted order two arrays of points by a given coordinate
-#--------------------------------------------------------------------
-def merge(coord, left, right):
-    res = []
-    i = 0
-    j = 0
-
-    if (coord == "x"):
-        ind = 0
-    else:
-        ind = 1
-
-    while (i < len(left) and j < len(right)):
-        if(left[i][ind] < right[j][ind]):
+        while (i < len(left)):
             res.append(left[i])
             i += 1
-        else:
+
+        while (j < len(right)):
             res.append(right[j])
             j += 1
-
-    while (i < len(left)):
-        res.append(left[i])
-        i += 1
-
-    while (j < len(right)):
-        res.append(right[j])
-        j += 1
-    
-    return res
+        
+        return res
