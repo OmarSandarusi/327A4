@@ -14,14 +14,14 @@ class Accounts:
         for line in lines:
             line = line.strip("\r\n ")
             params = line.split(' ')
-            if (params.length != 3):
-                Utility.fatal("Line " + count + " is invalid - parameter count != 3")
+            if (len(params) != 3):
+                Utility.fatal("Line " + str(count) + " is invalid - parameter count != 3")
             if (not Utility.checkAccountNumber(params[0])):
-                Utiltiy.fatal("Line " + count + " contains invalid account number")
+                Utility.fatal("Line " + str(count) + " contains invalid account number")
             if (not Utility.checkAmount(params[1])):
-                Utiltiy.fatal("Line " + count + " contains invalid account balance")
+                Utility.fatal("Line " + str(count) + " contains invalid account balance")
             if (not Utility.checkAccountName(params[2])):
-                Utiltiy.fatal("Line " + count + " contains invalid account name")
+                Utility.fatal("Line " + str(count) + " contains invalid account name")
             self.list.append(Account(int(params[0]), int(params[1]), params[2]))
     
     def addAccount(self, number, balance, name): #number and balance have to be int
