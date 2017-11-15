@@ -35,6 +35,25 @@ class FileIO:
         return True
 
     #--------------------------------------------------------------------
+    # Appends a line to a file, creating it if it doesn't exist
+    #--------------------------------------------------------------------
+    @staticmethod
+    def appendLine(path, line):
+        try:
+            file = open(path, 'a+')
+        except Exception as err:
+            print('Error opening file: ' + err.message)
+            return False
+        try:
+           file.write(line)
+        except Exception as err:
+            print('Error writing lines: ' + err.message)
+            file.close()
+            return False
+        file.close()
+        return True
+
+    #--------------------------------------------------------------------
     # Clears the contents of a file, creates if non existent
     #--------------------------------------------------------------------
     @staticmethod

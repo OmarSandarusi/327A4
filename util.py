@@ -65,9 +65,7 @@ class Utility:
 
     @staticmethod
     def log(msg):
-        lines = FileIO.readLines(errorPath)
-        lines.append(msg)
-        FileIO.writeLines(lines)
+        FileIO.appendLine(Utility.errorPath, msg + '\n')
         Utility.error(msg)
 
     @staticmethod    
