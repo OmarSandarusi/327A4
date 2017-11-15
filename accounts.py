@@ -93,7 +93,14 @@ class Accounts:
         return
 
     def finish(self): #sort and write
-        return
+        self.list = mergesort(self.list) 
+        validAccounts = []
+        master = []
+        for account in self.list:
+            validAccounts.append(account.number)
+            master.append('' + account.number + ' ' + account.balance + ' ' + account.name)
+        FileIO.writeLines(self.newMasterFile, master)
+        FileIO.writeLines(self.accountsFile, validAccounts)
 
     #--------------------------------------------------------------------
     # Sort accounts by their account number
