@@ -4,10 +4,10 @@ from util import Utility
 
 class Accounts:
     def __init__(self, oldMasterFile, newMasterFile, accountsFile):
-        lines = FileIO.readLines(path)
+        lines = FileIO.readLines(oldMasterFile)
         if len(lines) < 1:
             Utility.fatal('Empty Master Accounts File')
-        self.newMasterFile = masterFile
+        self.newMasterFile = newMasterFile
         self.accountsFile = accountsFile
         self.list = []
         count = 0
