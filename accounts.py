@@ -25,7 +25,7 @@ class Accounts:
             self.list.append(Account(int(params[0]), int(params[1]), params[2]))
     
     def addAccount(self, number, name): #number and balance have to be int
-        if getAccountByNumber(number) is None:
+        if self.getAccountByNumber(number) is None:
             Utility.log('Account already exists for account: ' + number)
         else:
             self.list.append(Account(number, 0, name))
@@ -43,7 +43,7 @@ class Accounts:
         return None
 
     def deleteAccount(self, number, name):
-        acct = getAccountByNumber(number)
+        acct = self.getAccountByNumber(number)
         if acct is None:
             Utility.log('Aborting delete, account does not exist: ' + number)
             return
@@ -59,14 +59,14 @@ class Accounts:
                     break
 
     def deposit(self, number, amount):
-        acct = getAccountByNumber(number)
+        acct = self.getAccountByNumber(number)
         if acct is None:
             Utility.log('Aborting deposit, account does not exist: ' + number)
             return
         acct.balance += amount
     
     def withdraw(self, number, amount):
-        acct = getAccountByNumber(number)
+        acct = self.getAccountByNumber(number)
         if acct is None:
             Utility.log('Aborting withdrawal, account does not exist: ' + number)
             return
@@ -76,8 +76,8 @@ class Accounts:
             acct.balance -= amount
 
     def transfer(self, fromNumber, toNumber, amount):
-        fromAcct = getAccountByNumber(fromNumber)
-        toAcct   = getAccountByNumber(toNumber)
+        fromAcct = self.getAccountByNumber(fromNumber)
+        toAcct   = self.getAccountByNumber(toNumber)
 
         if fromAcct is None:
             Utility.log('Aborting transfer, account does not exist: ' + fromNumber)
