@@ -40,7 +40,7 @@ class Commands:
             self.fatalAccountName('EOS', name)
         else:
             # If this is the second EOS in a row, exit
-            if cmd is 'EOS' and self.lastCommand is 'EOS':
+            if self.lastCommand is 'EOS':
                 self.accounts.finish()
                 sys.exit()
 

@@ -10,6 +10,13 @@ class Utility:
     errorPath = os.path.join(sys.path[0], 'error.txt')
 
     #--------------------------------------------------------------------
+    # Decode any UTF strings to ASCII, and strip any newlines
+    #--------------------------------------------------------------------
+    @staticmethod
+    def cleanString(string):
+        return string.decode('unicode_escape').encode('ascii', 'ignore').strip("\r\n").strip("\n")
+
+    #--------------------------------------------------------------------
     # Write an error to the console
     #--------------------------------------------------------------------
     @staticmethod

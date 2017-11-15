@@ -28,7 +28,7 @@ def getCommandArgs():
 # Parse a transaction file line into it's seperate parts
 #--------------------------------------------------------------------
 def parseLine(line):
-    return line.split(' ')
+    return Utility.cleanString(line).split(' ')
 
 #--------------------------------------------------------------------
 # Main
