@@ -1,8 +1,13 @@
 from fileio import FileIO
 from account import Account
 from util import Utility
-
+#--------------------------------------------------------------------
+# Encapulation for the list of accounts and operations on the list
+#--------------------------------------------------------------------
 class Accounts:
+    #--------------------------------------------------------------------
+    # Load the master accounts file and construct the accounts list
+    #--------------------------------------------------------------------
     def __init__(self, oldMasterFile, newMasterFile, accountsFile):
         lines = FileIO.readLines(oldMasterFile)
         if len(lines) < 1:
@@ -24,24 +29,36 @@ class Accounts:
 
             self.list.append(Account(int(params[0]), int(params[1]), params[2]))
     
+    #--------------------------------------------------------------------
+    # Add an account
+    #--------------------------------------------------------------------
     def addAccount(self, number, name): #number and balance have to be int
         if self.getAccountByNumber(number) is None:
             Utility.log('Account already exists for account: ' + number)
         else:
             self.list.append(Account(number, 0, name))
 
+    #--------------------------------------------------------------------
+    # Get an account by its number
+    #--------------------------------------------------------------------
     def getAccountByNumber(self, number):
         for account in self.list:
             if account.number == number:
                 return account
         return None
 
+    #--------------------------------------------------------------------
+    # Get an account by its name
+    #--------------------------------------------------------------------
     def getAccountByName(self, name):
         for account in self.list:
             if account.name == name:
                 return account
         return None
 
+    #--------------------------------------------------------------------
+    # Delete an account
+    #--------------------------------------------------------------------
     def deleteAccount(self, number, name):
         acct = self.getAccountByNumber(number)
         if acct is None:
@@ -58,6 +75,9 @@ class Accounts:
                     del self.list[i]
                     break
 
+    #--------------------------------------------------------------------
+    # Deposit an amount to an account
+    #--------------------------------------------------------------------
     def deposit(self, number, amount):
         acct = self.getAccountByNumber(number)
         if acct is None:
@@ -65,6 +85,9 @@ class Accounts:
             return
         acct.balance += amount
     
+    #--------------------------------------------------------------------
+    # Withdraw an amount from an account
+    #--------------------------------------------------------------------
     def withdraw(self, number, amount):
         acct = self.getAccountByNumber(number)
         if acct is None:
@@ -74,7 +97,10 @@ class Accounts:
             Utility.log('Aborting withdrawal, the account does not have enough funds: ' + number)
         else:
             acct.balance -= amount
-
+    
+    #--------------------------------------------------------------------
+    # Transfer an amount between the two accounts
+    #--------------------------------------------------------------------
     def transfer(self, fromNumber, toNumber, amount):
         fromAcct = self.getAccountByNumber(fromNumber)
         toAcct   = self.getAccountByNumber(toNumber)
@@ -92,6 +118,9 @@ class Accounts:
             toAcct.balance   += amount
         return
 
+    #--------------------------------------------------------------------
+    # Sort list and output the master and valid account files
+    #--------------------------------------------------------------------
     def finish(self): #sort and write
         self.list = mergesort(self.list) 
         validAccounts = []

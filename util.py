@@ -63,11 +63,17 @@ class Utility:
         elif (name[0] == ' ' or name[len(name) - 1] == ' '):
             Utility.fatal("Account name cannot be prefixed or end in a space: " + name)
 
+    #--------------------------------------------------------------------
+    # Logs the error to the error file and the console
+    #--------------------------------------------------------------------
     @staticmethod
     def log(msg):
         FileIO.appendLine(Utility.errorPath, msg + '\n')
         Utility.error(msg)
 
+    #--------------------------------------------------------------------
+    # Calls Utility.log and then raises an error with the message
+    #--------------------------------------------------------------------
     @staticmethod    
     def fatal(msg):
         Utility.log(msg)
