@@ -94,3 +94,28 @@ class Accounts:
 
     def finish(self): #sort and write
         return
+
+
+#--------------------------------------------------------------------
+# Sort our points by x and y
+#--------------------------------------------------------------------
+def sort():
+    global xPoints
+    global yPoints
+
+    xPoints = mergesort('x', Points)
+    yPoints = mergesort('y', Points)
+
+#--------------------------------------------------------------------
+# Sort each pair of coordinates by either their x or y values
+#--------------------------------------------------------------------
+def mergesort(coord, points):
+    if (len(points) == 1 or len(points) == 0):
+        return points
+
+    mid = len(points) / 2
+    
+    l = mergesort(coord, points[:mid])
+    r = mergesort(coord, points[mid:])
+
+    return merge(coord, l, r)
