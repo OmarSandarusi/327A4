@@ -8,20 +8,6 @@ from fileio import FileIO
 #--------------------------------------------------------------------
 class Utility:
     errorPath = os.path.join(sys.path[0], 'error.txt')
-    #--------------------------------------------------------------------
-    # Read in input from the console with a given message, appending the 
-    # common input character. Prevent catch a crash if it reads in a EOF
-    # and just have it exit instead
-    #--------------------------------------------------------------------
-    @staticmethod
-    def getInput(msg):
-        try:
-            inp = raw_input(msg + " > ")
-        except(EOFError):
-            # End the program if we get an EOF
-            sys.exit()
-        
-        return Utility.cleanString(inp)
 
     #--------------------------------------------------------------------
     # Decode any UTF strings to ASCII, and strip any newlines
@@ -88,8 +74,3 @@ class Utility:
     def fatal(msg):
         Utility.log(msg)
         raise ValueError(msg)
-
-    @staticmethod
-    def validateAmount(amount):
-        if (not amount.isdigit()):
-            Utility.fatal()
