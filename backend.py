@@ -37,7 +37,7 @@ def parseLine(line):
 
 args     = getCommandArgs()
 commands = Commands(args.oldmasterfile, args.newmasterfile, args.newaccountsfile)
-lines    = readLines(args.mergedtransactionfile)
+lines    = FileIO.readLines(args.mergedtransactionfile)
 
 for line in lines:
     parsed = parseLine(line)
