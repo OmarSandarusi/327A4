@@ -24,11 +24,11 @@ class Accounts:
                 Utility.fatal("Line " + str(count) + " contains invalid account name")
             self.list.append(Account(int(params[0]), int(params[1]), params[2]))
     
-    def addAccount(self, number, balance, name): #number and balance have to be int
+    def addAccount(self, number, name): #number and balance have to be int
         if getAccountByNumber(number) is None:
             Utility.log('Account already exists for account: ' + number)
         else:
-            self.list.append(Account(number, balance, name))
+            self.list.append(Account(number, 0, name))
 
     def getAccountByNumber(self, number):
         for account in self.list:

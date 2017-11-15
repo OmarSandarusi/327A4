@@ -59,7 +59,7 @@ class Commands:
         if acct is not None:
             Utility.log('Account number already exists.')
         else:
-            self.accounts.addAccount(account1, 0, name)
+            self.accounts.addAccount(account1, name)
     #--------------------------------------------------------------------
     # Deleteacct
     #--------------------------------------------------------------------
