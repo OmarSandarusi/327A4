@@ -12,7 +12,6 @@ import argparse
 from fileio   import FileIO
 from commands import Commands
 from util     import Utility
-from accounts import Accounts
 
 #--------------------------------------------------------------------
 # Get the command line options
