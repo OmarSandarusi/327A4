@@ -119,3 +119,34 @@ def mergesort(coord, points):
     r = mergesort(coord, points[mid:])
 
     return merge(coord, l, r)
+
+#--------------------------------------------------------------------
+# Merge in sorted order two arrays of points by a given coordinate
+#--------------------------------------------------------------------
+def merge(coord, left, right):
+    res = []
+    i = 0
+    j = 0
+
+    if (coord == "x"):
+        ind = 0
+    else:
+        ind = 1
+
+    while (i < len(left) and j < len(right)):
+        if(left[i][ind] < right[j][ind]):
+            res.append(left[i])
+            i += 1
+        else:
+            res.append(right[j])
+            j += 1
+
+    while (i < len(left)):
+        res.append(left[i])
+        i += 1
+
+    while (j < len(right)):
+        res.append(right[j])
+        j += 1
+    
+    return res
